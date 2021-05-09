@@ -2,30 +2,37 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" href="{% static 'images/logo.png' %}" type="image/x-icon">
     <title>云分享平台</title>
     <link rel="stylesheet" href="{% static 'css/news/index.css' %}">
+    <link rel="stylesheet" href="{% static 'css/common/auth.css' %}">
     <link rel="stylesheet" href="//at.alicdn.com/t/font_2468834_wuaxst7129j.css">
     <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
+    <script src="{% static 'layui/layui.js' %}"></script>
     <script src="{% static 'js/index.js' %}"></script>
+    <script src="{% static 'js/auth.js' %}"></script>
 </head>
 <body>
     <header class="header">
         <div class="container">
             <div class="logo-box">
-                <a href="/"></a>
+                <img style="float: left" src="{% static 'images/logo.png' %}" alt="">
+
+            </div>
+            <div style="float: left">
+                <a style="float: left;color: #ffffff;line-height: 60px;font-size: 20px;margin-left: 10px" href="/"><p>云分享平台</p></a>
             </div>
 
             <ul class="nav">
-                <li class="active"><a href="/">创业资讯</a></li>
-                <li><a href="#">创业课堂</a></li>
-                <li><a href="#">付费资讯</a></li>
+                <li class="active"><a href="/">主页</a></li>
+                <li><a href="#">资源</a></li>
                 <li><a href="#">搜索</a></li>
             </ul>
 
             <div class="auth-box">
                 <i class="icon-person iconfont"></i>
-                <a href="#">登录</a> /
-                <a href="#">注册</a>
+                <a href="javascript:void(0);" class="login-btn">登录</a> /
+                <a href="javascript:void(0);" class="signin-btn">注册</a>
             </div>
         </div>
     </header>
@@ -219,5 +226,60 @@
             ©2017 北京子木投资顾问有限公司 京ICP备15051289号-1
         </div>
     </footer>
+<div class="mask-wrapper">
+        <div class="auth-wrapper">
+            <div class="close-wrapper">
+                <span class="close-btn icon-close iconfont"></span>
+            </div>
+            <div class="auth-inner-wrapper">
+                <div class="scroll-wrapper">
+                    <div class="signin-group auth-group">
+                        <div class="top-group">
+                            <span class="title">请登录</span>
+                            <a href="javascript: void(0);" class="switch">立即注册></a>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <input type="text" class="form-control" name="username" placeholder="请输入用户名">
+                            </div>
+                             <div class="input-group">
+                                <input type="password" class="form-control" name="password" placeholder="请输入密码">
+                            </div>
+                            <div class="input-group">
+                                <label class="remember-label">
+                                    <input type="checkbox" name="remember" value="1">
+                                    记住我
+                                </label>
+                            </div>
+                            <div class="input-group">
+                                <input type="submit" class="submit-btn" value="立即登录">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="signup-group auth-group">
+                        <div class="top-group">
+                            <span class="title">请注册</span>
+                            <a href="javascript: void(0);" class="switch">立即登录></a>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <input type="text" class="form-control" name="username" placeholder="用户名">
+                            </div>
+
+                            <div class="input-group">
+                                <input type="password" class="form-control" name="password1" placeholder="密码">
+                            </div>
+                            <div class="input-group">
+                                <input type="password" class="form-control" name="password2" placeholder="确认密码">
+                            </div>
+                            <div class="input-group">
+                                <button class="submit-btn">立即注册</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

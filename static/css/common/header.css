@@ -23,7 +23,6 @@ a, abbr, acronym, address, applet, article, aside, audio, b, big, blockquote, bo
     .header .container .logo-box {
       width: 140px;
       height: 49px;
-      background: url("http://www.xfz.cn/static/build/images/logo.png") no-repeat;
       margin-top: 8px;
       float: left; }
       .header .container .logo-box a {

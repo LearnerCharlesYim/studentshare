@@ -29,9 +29,9 @@ a, abbr, acronym, address, applet, article, aside, audio, b, big, blockquote, bo
     margin: 0 auto;
     overflow: hidden; }
     .header .container .logo-box {
-      width: 140px;
+      width: 50px;
       height: 49px;
-      background: url("http://www.xfz.cn/static/build/images/logo.png") no-repeat;
+
       margin-top: 8px;
       float: left; }
       .header .container .logo-box a {
