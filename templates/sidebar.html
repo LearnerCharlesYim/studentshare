@@ -1,0 +1,71 @@
+<div class="sidebar-wrapper">
+                <div class="title-group">
+                    <span class="title">用户信息</span>
+                    <a class="more" href="{% url 'profile' %}">更多</a>
+                </div>
+                <div style="width: 345px;height: 60px;border-bottom: 1px solid #f2f2f2">
+                    <div style="float: left;margin-left:15px;width: 50px;height: 50px;">
+                         <a href="#">
+                        <img style="width: 100%" src="{% static 'images/avatar.jpg' %}" alt="">
+                        </a>
+                    </div>
+                    <div style="line-height: 50px;font-size: 18px;margin-left: 10px;float: left">
+                        <p><a href="{% url 'profile' %}">{{ request.session.current_user.username }}</a></p>
+                    </div>
+                </div>
+                <div style="width: 345px;height: 46px;">
+                    <div style="padding: 26px;overflow: hidden;text-align: center">
+                        <ul style="list-style: none;">
+                            <li style="float: left"><a href="">发布 2</a></li>
+                            <li style="float: left;margin-left: 20px;color: #f2f2f2">|</li>
+                            <li style="float: left;margin-left: 20px"><a href="">交易完成 3</a></li>
+                            <li style="float: left;margin-left: 20px;color: #f2f2f2">|</li>
+                            <li style="float: left;margin-left: 20px"><a href="">交易中 3</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div style="padding: 20px;border-bottom: 1px solid #f2f2f2">
+                    <button style="width: 100%" type="button" class="layui-btn layui-btn-danger">发布资源</button>
+                </div>
+
+                <div style="background: #FFC0CB;height: 20px;"></div>
+                <div class="hot-news-group">
+                    <div class="title-group">
+                        <span class="title">热门推荐</span>
+                    </div>
+                    <ul class="hot-list-group">
+                        <li style="margin-bottom: 10px">
+                            <div class="left-group">
+                                <p class="title">
+                                    <a href="#">王健林卖掉进军海外首个项目:17亿售伦敦ON...</a>
+                                </p>
+                                <p class="more">
+                                    <span class="category">深度报道</span>
+                                    <span class="pub-time">1小时前</span>
+                                </p>
+                            </div>
+                            <div class="right-group">
+                                <a href="#">
+                                    <img src="http://static-image.xfz.cn/1516169692_914.jpg-website.news.list" alt="">
+                                </a>
+                            </div>
+                        </li>
+                        <li style="margin-bottom: 10px">
+                            <div class="left-group">
+                                <p class="title">
+                                    <a href="#">王健林卖掉进军海外首个项目:17亿售伦敦ON...</a>
+                                </p>
+                                <p class="more">
+                                    <span class="category">深度报道</span>
+                                    <span class="pub-time">1小时前</span>
+                                </p>
+                            </div>
+                            <div class="right-group">
+                                <a href="#">
+                                    <img src="http://static-image.xfz.cn/1516169692_914.jpg-website.news.list" alt="">
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>

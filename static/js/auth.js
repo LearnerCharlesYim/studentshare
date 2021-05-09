@@ -80,19 +80,18 @@ $(function () {
                 },
 
             })
-        })
+        });
 
         $('.signin-group').find('.submit-btn').click(function () {
 
             var username = $('.signin-group').find('input[name="username"]').val();
             var password = $('.signin-group').find('input[name="password"]').val();
-            var remember = $('.signin-group').find('input[name="remember"]').val();
+            var remember = $('.signin-group').find("input[type='checkbox']:checked").prop('checked');
 
             if(username === '' ){
                 layer.msg('请输入用户名');
                 return
             }
-
 
             $.ajax({
                 url:'login/',
@@ -100,12 +99,20 @@ $(function () {
                 data:{
                     'username':username,
                     'password':password,
-                    'remember':remember?1:0
+                    'remember':remember
                 },
                 success:function (data) {
                     if(data['code'] === 200){
                         $(".mask-wrapper").hide();
                         layer.msg(data['message'], {icon: 1});
+                        setTimeout(function () {
+                            window.location.reload();
+                        },800);
+
+
+
+
+
 
                     }else{
                        layer.msg(data['message'],{icon:2});

@@ -1,0 +1,195 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<div class="main">
+        <div class="wrapper">
+            <div style="background: #ffffff" class="main-content-wrapper">
+                <div style="padding: 10px" class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+                  <ul class="layui-tab-title">
+                    <li class="layui-this">基础设置</li>
+                    <li>安全设置</li>
+                    <li>我的资源</li>
+                    <li>正在交易</li>
+                    <li>完成交易</li>
+                  </ul>
+                  <div class="layui-tab-content" >
+                    <div style="width: 650px" class="layui-tab-item layui-show">
+
+                            <div style="overflow: hidden" class="layui-form-item">
+                            <label style="float: left" class="layui-form-label">头像</label>
+                            <div style="float: left;padding: 10px;height: 55px;width:55px;">
+
+                                <img style="width: 100%;height: 100%" id="demo1" src='/static/images/{{ user.avatar }}' alt="">
+                            </div>
+                                <div class="layui-upload">
+                                  <button style="margin-left: 20px;margin-top: 10px" type="button" class="layui-btn" id="test1">上传图片</button>
+                                </div>
+                          </div>
+                          <div class="layui-form-item">
+                            <label class="layui-form-label">用户名</label>
+                            <div class="layui-input-block">
+                              <input type="text" name="username" lay-verify="title" autocomplete="off"  value="{{ user.username }}" class="layui-input">
+                            </div>
+                          </div>
+                          <div class="layui-form-item">
+                            <label class="layui-form-label">真实姓名</label>
+                            <div class="layui-input-block">
+                              <input type="text" name="realname" lay-verify="required"  placeholder="请输入" {% if user.realname %} value="{{ user.realname }}" {% endif %} autocomplete="off" class="layui-input">
+                            </div>
+                          </div>
+                             <div class="layui-form-item">
+                            <label class="layui-form-label">联系电话</label>
+                            <div class="layui-input-block">
+                              <input type="text" name="telephone" lay-verify="required"  placeholder="请输入" {% if user.telephone %} value="{{ user.telephone }}" {% endif %} autocomplete="off" class="layui-input">
+                            </div>
+                          </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">个性签名</label>
+                            <div class="layui-input-block">
+                              <input type="text" name="signature" lay-verify="required"  placeholder="请输入" {% if user.signature %}value="{{ user.signature }}" {% endif %} autocomplete="off" class="layui-input">
+                            </div>
+                          </div>
+                        <div style="margin-left: 33px;padding: 10px;">
+                            <button style= "width: 100%" id="submit-btn" class="layui-btn layui-btn-danger">保存</button>
+                        </div>
+
+
+                    </div>
+                    <div style="width: 650px" class="layui-tab-item">
+
+
+                          <div class="layui-form-item">
+                            <label class="layui-form-label">原密码</label>
+                            <div class="layui-input-block">
+                              <input type="password" name="password" lay-verify="title" autocomplete="off"  class="layui-input">
+                            </div>
+                          </div>
+                          <div class="layui-form-item">
+                            <label class="layui-form-label">新密码</label>
+                            <div class="layui-input-block">
+                              <input type="password" name="password1" lay-verify="required" autocomplete="off" class="layui-input">
+                            </div>
+                          </div>
+                             <div class="layui-form-item">
+                            <label class="layui-form-label">确认密码</label>
+                            <div class="layui-input-block">
+                              <input type="password" name="password2" lay-verify="required"autocomplete="off" class="layui-input">
+                            </div>
+                          </div>
+
+                        <div style="margin-left: 33px;padding: 10px;">
+                            <button style= "width: 100%" id="pwd-btn" type="button" class="layui-btn layui-btn-danger">保存</button>
+                        </div>
+
+
+                    </div>
+                    <div class="layui-tab-item">
+                        内容3</div>
+                    <div class="layui-tab-item">内容4
+                    </div>
+                    <div class="layui-tab-item">
+                        内容5
+                    </div>
+                  </div>
+                </div>
+            </div>
+            {% include 'sidebar.html' %}
+        </div>
+    </div>
+    <script>
+    layui.use(['upload', 'element', 'layer'], function() {
+            var $ = layui.jquery
+            , upload = layui.upload
+            , element = layui.element
+            , layer = layui.layer;
+              var uploadInst = upload.render({
+                    elem: '#test1'
+                    ,url: '/upload/'
+                    ,done: function(res){
+                      //如果上传失败
+                      if(res.code === 0){
+                        $('#demo1').attr('src','/static/images/'+ res.msg);
+                      }
+                      //上传成功的一些操作
+                      $('#demoText').html(''); //置空上传失败的状态
+                    }
+                    ,error: function(){
+                      //演示失败状态，并实现重传
+                      var demoText = $('#demoText');
+                      demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+                      demoText.find('.demo-reload').on('click', function(){
+                        uploadInst.upload();
+                      });
+                    }
+
+            });
+           $('#submit-btn').click(function () {
+           var username = $('input[name="username"]').val();
+           var realname = $('input[name="realname"]').val();
+           var telephone = $('input[name="telephone"]').val();
+           var signature = $('input[name="signature"]').val();
+           if(username === ''){
+               layer.msg('请输入用户名');
+               return;
+           }
+           $.ajax({
+               url:'/profile/',
+               type:'POST',
+               data:{
+                   'username':username,
+                   'realname':realname,
+                   'telephone':telephone,
+                   'signature':signature
+               },
+               success:function (data) {
+                   if(data['code'] === 200){
+                       layer.msg(data['message'], {icon: 1});
+
+                   }else{
+                       layer.msg(data['message'],{icon:2});
+                       $('input[name="username"]').val('');
+                   }
+               }
+           })
+        });
+           $('#pwd-btn').click(function () {
+           var password = $('input[name="password"]').val();
+           var password1 = $('input[name="password1"]').val();
+           var password2 = $('input[name="password2"]').val();
+           if(parseInt(password) !== {{ user.password }}){
+               layer.msg('原密码错误',{icon:2});
+               $('input[name="password"]').val('');
+               return;
+           }
+           if(password1 === ''){
+               layer.msg('请输入密码',{icon:2});
+               return;
+           }
+           if(password1 !== password2){
+               layer.msg('两次密码不一致',{icon:2});
+               $('input[name="password1"]').val('');
+               $('input[name="password2"]').val('');
+               return;
+           }
+           $.ajax({
+               url:'/repwd/',
+               type:'POST',
+               data:{
+                   'password':password1,
+
+               },
+               success:function (data) {
+                   if(data['code'] === 200){
+                       layer.msg(data['message'], {icon: 1});
+                       $('input[name="password"]').val('');
+                       $('input[name="password1"]').val('');
+                       $('input[name="password2"]').val('');
+                   }
+               }
+           })
+        })
+
+    });
+    </script>
+
+{% endblock %}
