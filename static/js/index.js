@@ -182,3 +182,4 @@ FrontBase.prototype.handleNavStatus = function () {
         }
     });
 };
+

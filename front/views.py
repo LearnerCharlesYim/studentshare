@@ -93,3 +93,6 @@ def repwd(request):
     user.password = password
     user.save()
     return JsonResponse({'code':200,'message':'修改成功'})
+
+def addres(request):
+    return render(request,'addres.html')

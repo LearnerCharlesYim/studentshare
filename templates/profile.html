@@ -8,13 +8,12 @@
                   <ul class="layui-tab-title">
                     <li class="layui-this">基础设置</li>
                     <li>安全设置</li>
-                    <li>我的资源</li>
+                    <li id="myres">我的资源</li>
                     <li>正在交易</li>
                     <li>完成交易</li>
                   </ul>
                   <div class="layui-tab-content" >
                     <div style="width: 650px" class="layui-tab-item layui-show">
-
                             <div style="overflow: hidden" class="layui-form-item">
                             <label style="float: left" class="layui-form-label">头像</label>
                             <div style="float: left;padding: 10px;height: 55px;width:55px;">
@@ -22,7 +21,7 @@
                                 <img style="width: 100%;height: 100%" id="demo1" src='/static/images/{{ user.avatar }}' alt="">
                             </div>
                                 <div class="layui-upload">
-                                  <button style="margin-left: 20px;margin-top: 10px" type="button" class="layui-btn" id="test1">上传图片</button>
+                                  <button style="margin-left: 20px;margin-top: 20px" type="button" class="layui-btn" id="test1">上传图片</button>
                                 </div>
                           </div>
                           <div class="layui-form-item">
@@ -84,7 +83,41 @@
 
                     </div>
                     <div class="layui-tab-item">
-                        内容3</div>
+                         <div style="overflow: hidden">
+                             <button style="float: left" class="layui-btn layui-btn-primary" id="dropdown">
+                            分类
+                            <i class="layui-icon layui-icon-down layui-font-12"></i>
+                          </button>
+                        <h3 style="float: left;margin-left: 20px;margin-top: 10px"></h3>
+                        <button style="float: right" id="pub-btn" class="layui-btn layui-btn-normal">发布资源</button>
+                         </div>
+                        <div>
+                            <ul style="padding: 10px;list-style: none">
+                                <li>
+                                    <div style="overflow:hidden;;border-bottom: 1px solid #f2f2f2">
+                                        <div style="padding: 10px;float: left;width: 150px;height: 150px;">
+                                            <img style="width: 100%;height: 100%;" src="{% static 'images/logo.png' %}" alt="">
+                                        </div>
+                                        <div style="float: left;width: 550px;">
+                                            <div style="margin-top: 6px;margin-left: 20px;height: 130px">
+                                                <p style="font-size: 20px">大萨达撒你都见过如此就送</p>
+                                                <p style="margin-top: 10px;font-size: 15px">你都见过如你都见过如你都见过如你都见过如你都见过如你都见过如你都见过如你都见过如</p>
+
+                                            </div>
+                                            <div style="margin-left: 20px;height: 35px; ">
+                                                <div style="float: left"><a href="">音视频</a></div>
+                                                <div style="float: right;margin-top: 2px">2021.5.9 16:20:22</div>
+                                                <div style="float: right;margin-right: 10px"><a href="">下架</a></div>
+                                                <div style="float: right;margin-right: 10px"><a href="">编辑</a></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+
                     <div class="layui-tab-item">内容4
                     </div>
                     <div class="layui-tab-item">
@@ -187,9 +220,47 @@
                    }
                }
            })
-        })
+        });
+           $('#pub-btn').click(function () {
+               layer.open({
+                  type: 2,
+                  title: '发布资源',
+                  shadeClose: true,
+                  shade: 0.4,
+                  area: ['600px', '600px'],
+                  content: ['/addres/','no'], //iframe的url
+                });
+           })
 
+    });
+
+    layui.use('dropdown', function(){
+      var dropdown = layui.dropdown;
+      dropdown.render({
+        elem: '#dropdown' //可绑定在任意元素中，此处以上述按钮为例
+        ,data: [{
+          title: '文档'
+          ,id: 1
+
+        },{
+          title: '音视频'
+          ,id: 2
+
+        },{
+          title: '二手物品'
+          ,id: 3
+            }]
+        ,id: 'dropdown'
+        //菜单被点击的事件
+        ,click: function(obj){
+          console.log(obj);
+          //obj.title obj.id
+              $('#dropdown').next().text('搜索结果：'+obj.title);
+
+        }
+      });
     });
     </script>
 
+    
 {% endblock %}
