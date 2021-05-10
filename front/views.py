@@ -1,6 +1,6 @@
 from django.shortcuts import render,redirect,reverse
 from django.views.decorators.http import require_http_methods
-from .models import User,Resources,Record
+from .models import User,Resources,Record,RecordFinish
 import os
 from django.http import HttpResponse,JsonResponse
 from functools import wraps
@@ -77,7 +77,17 @@ def profile(request):
             if record.recipient_resources or record.sender_resources in user.resources_set.all():
                 user_records.append(record)
 
-        return render(request,'profile.html',context={'user':user,'resources':resources,'user_records':user_records})
+        user_finish_records = []
+        finish_records = RecordFinish.objects.all()
+        for record in finish_records:
+            for i in record.sender_resources.all():
+                if i in user.resources_set.all():
+                    user_finish_records.append(record)
+            for j in record.recipient_resources.all():
+                if j in user.resources_set.all():
+                    user_finish_records.append(record)
+
+        return render(request,'profile.html',context={'user':user,'resources':resources,'user_records':user_records,'user_finish_records':user_finish_records})
     else:
         username = request.POST.get('username')
         if User.objects.filter(username=username) and user.username != username:
@@ -221,3 +231,16 @@ def trading(request):
         record.recipient_resources = recipient_resources
         record.save()
         return JsonResponse({'code':200,'message':''})
+
+@require_http_methods(['POST'])
+def access_trade(request):
+    data_id = request.POST.get('data_id')
+    record = Record.objects.get(id=data_id)
+    record_finish = RecordFinish(is_success=True)
+    record_finish.save()
+    record_finish.sender_resources.add(record.sender_resources)
+    record_finish.recipient_resources.add(record.recipient_resources)
+
+    record.delete()
+    return JsonResponse({'code':200,'message':''})
+

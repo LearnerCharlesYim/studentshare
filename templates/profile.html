@@ -146,8 +146,8 @@
                             交易资源：{{ user_record.recipient_resources.name |truncatechars:10}}
                             交易状态：{% if user_record.status == 1 %}交易进行中{% endif %}
                             {% if user_record.recipient_resources.owner == user %}
-                                <button id="access">同意交易</button>
-                                <button id="cancel">取消交易</button>
+                                <button class="access">同意交易</button>
+                                <button class="cancel">取消交易</button>
                             {% endif %}
                             </li>
 
@@ -155,7 +155,7 @@
                     </ul>
                     </div>
                     <div class="layui-tab-item">
-                        内容5
+
                     </div>
                   </div>
                 </div>
@@ -256,8 +256,23 @@
            })
         });
     
-           $('#access').click(function () {
+           $('.access').click(function () {
+               var self = $(this);
+               var data_id = self.parent().attr('data-id');
+               $.ajax({
+                   url:'/access/',
+                   type:'POST',
+                   data:{
+                       'data_id':data_id
+                   },
+                   success:function (data) {
+                       if(data['code'] === 200){
+                           self.parent().remove();
+                           layer.msg('交易成功',{icon:1});
 
+                       }
+                   }
+               })
            })
 
     });
