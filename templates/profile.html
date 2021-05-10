@@ -17,8 +17,12 @@
                             <div style="overflow: hidden" class="layui-form-item">
                             <label style="float: left" class="layui-form-label">头像</label>
                             <div style="float: left;padding: 10px;height: 55px;width:55px;">
+                                {% if user.avatar %}
+                                    <img style="width: 100%;height: 100%" id="demo1" src='/static/images/{{ user.avatar }}' alt="">
+                                {% else %}
+                                    <img style="width: 100%;height: 100%" id="demo1" src='/static/images/avatar.jpg' alt="">
+                                {% endif %}
 
-                                <img style="width: 100%;height: 100%" id="demo1" src='/static/images/{{ user.avatar }}' alt="">
                             </div>
                                 <div class="layui-upload">
                                   <button style="margin-left: 20px;margin-top: 20px" type="button" class="layui-btn" id="test1">上传图片</button>
@@ -85,7 +89,6 @@
                     <div class="layui-tab-item">
                          <div style="overflow: hidden">
 
-
                           </button>
                         <h3 style="float: left;margin-left: 20px;margin-top: 10px"></h3>
                         <button style="float: right" id="pub-btn" class="layui-btn layui-btn-normal">发布资源</button>
@@ -106,7 +109,7 @@
                                                     <span class="layui-badge">免费</span>
                                                     {% endif %}
                                                 </p>
-                                                <p style="margin-top: 10px;font-size: 15px">{{ res.desc }}</p>
+                                                <p style="margin-top: 10px;font-size: 15px">{{ res.desc|truncatechars:160 }}</p>
                                             </div>
                                             <div style="margin-left: 20px;height: 35px; ">
                                                 <div style="float: left"><a href="">
@@ -133,7 +136,23 @@
                     </div>
 
 
-                    <div class="layui-tab-item">内容4
+                    <div class="layui-tab-item">
+                    <ul>
+                        {% for user_record in user_records %}
+                            <li data-id="{{ user_record.id }}">
+
+                            交易时间：{{ user_record.trade_time| date:"Y/m/d G:i:s" }}
+                            资源筹码：{{ user_record.sender_resources.name |truncatechars:10}}
+                            交易资源：{{ user_record.recipient_resources.name |truncatechars:10}}
+                            交易状态：{% if user_record.status == 1 %}交易进行中{% endif %}
+                            {% if user_record.recipient_resources.owner == user %}
+                                <button id="access">同意交易</button>
+                                <button id="cancel">取消交易</button>
+                            {% endif %}
+                            </li>
+
+                        {% endfor %}
+                    </ul>
                     </div>
                     <div class="layui-tab-item">
                         内容5
@@ -236,7 +255,10 @@
                }
            })
         });
+    
+           $('#access').click(function () {
 
+           })
 
     });
 
@@ -282,7 +304,25 @@
                     alert('下架成功');
             }
         })
-    })
+    });
+
+    $(function () {
+    layui.use(['layer'], function () {
+        var $ = layui.jquery
+            , layer = layui.layer;
+        $('.edit a').click(function () {
+            var data_id = $(this).parent().attr('data-id');
+            layer.open({
+                type: 2,
+                title: '编辑资源',
+                shadeClose: true,
+                shade: 0.4,
+                area: ['600px', '500px'],
+                content: ['/edit_res/?id='+data_id, 'no'], //iframe的url
+            });
+        });
+    });
+});
 
 
     </script>

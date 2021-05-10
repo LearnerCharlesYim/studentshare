@@ -1,11 +1,11 @@
 {% extends 'base.html' %}
+{% load myfilter %}
 
 {% block head %}
     <link rel="stylesheet" href="{% static 'css/course/course_index.css' %}">
     <script>
     $(function () {
-
-        $('.nav li').first().removeClass('active')
+        $('.nav li').first().removeClass('active');
 
 });
     </script>
@@ -26,8 +26,8 @@
         <div class="wrapper">
             <ul class="course-list">
                 {% for res in resources %}
-                     <li>
-                    <a href="#">
+                 <li>
+                    <a href="{% url 'res_detail' id=res.id %}">
                         <div class="thumbnail-group">
                             <img src="{{ res.img }}" alt="" class="thumbnial">
                         </div>
@@ -44,9 +44,12 @@
                         </div>
                     </a>
                 </li>
-
                 {% endfor %}
-            <li></li>
+                {% for _ in sum|get_range %}
+                  <li></li>
+                {% endfor %}
+
+
             </ul>
         </div>
     </div>
