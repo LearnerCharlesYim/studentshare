@@ -183,3 +183,25 @@ FrontBase.prototype.handleNavStatus = function () {
     });
 };
 
+
+
+
+$(function () {
+    layui.use(['layer'], function () {
+        var $ = layui.jquery
+            , layer = layui.layer;
+        $('#pub-btn,#subres-btn').click(function () {
+            layer.open({
+                type: 2,
+                title: '发布资源',
+                shadeClose: true,
+                shade: 0.4,
+                area: ['600px', '500px'],
+                content: ['/addres/', 'no'], //iframe的url
+            });
+        });
+    });
+});
+
+
+

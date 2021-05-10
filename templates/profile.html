@@ -84,35 +84,50 @@
                     </div>
                     <div class="layui-tab-item">
                          <div style="overflow: hidden">
-                             <button style="float: left" class="layui-btn layui-btn-primary" id="dropdown">
-                            分类
-                            <i class="layui-icon layui-icon-down layui-font-12"></i>
+
+
                           </button>
                         <h3 style="float: left;margin-left: 20px;margin-top: 10px"></h3>
                         <button style="float: right" id="pub-btn" class="layui-btn layui-btn-normal">发布资源</button>
                          </div>
                         <div>
                             <ul style="padding: 10px;list-style: none">
-                                <li>
+                                {% for res in resources %}
+                                    <li data-id="{{ res.id }}">
                                     <div style="overflow:hidden;;border-bottom: 1px solid #f2f2f2">
                                         <div style="padding: 10px;float: left;width: 150px;height: 150px;">
-                                            <img style="width: 100%;height: 100%;" src="{% static 'images/logo.png' %}" alt="">
+                                            <img style="width: 100%;height: 100%;" src="{{ res.img }}" alt="">
                                         </div>
                                         <div style="float: left;width: 550px;">
                                             <div style="margin-top: 6px;margin-left: 20px;height: 130px">
-                                                <p style="font-size: 20px">大萨达撒你都见过如此就送</p>
-                                                <p style="margin-top: 10px;font-size: 15px">你都见过如你都见过如你都见过如你都见过如你都见过如你都见过如你都见过如你都见过如</p>
-
+                                                <p style="font-size: 20px">
+                                                    {{ res.name }}
+                                                    {% if res.is_free %}
+                                                    <span class="layui-badge">免费</span>
+                                                    {% endif %}
+                                                </p>
+                                                <p style="margin-top: 10px;font-size: 15px">{{ res.desc }}</p>
                                             </div>
                                             <div style="margin-left: 20px;height: 35px; ">
-                                                <div style="float: left"><a href="">音视频</a></div>
-                                                <div style="float: right;margin-top: 2px">2021.5.9 16:20:22</div>
-                                                <div style="float: right;margin-right: 10px"><a href="">下架</a></div>
-                                                <div style="float: right;margin-right: 10px"><a href="">编辑</a></div>
+                                                <div style="float: left"><a href="">
+                                                    {% if res.type == 1 %}
+                                                        文档
+                                                        {% elif res.type == 2 %}
+                                                        音视频
+                                                    {% elif res.type == 3 %}
+                                                        二手物品
+                                                    {% endif %}
+                                                </a></div>
+                                                <div style="float: right;margin-top: 2px">{{ res.pub_time | date:"Y/m/d G:i:s" }}</div>
+                                                <div class="del" data-id="{{ res.id }}" style="float: right;margin-right: 10px"><a href="javascript:void(0)">下架</a></div>
+                                                <div class="edit" data-id="{{ res.id }}" style="float: right;margin-right: 10px"><a href="javascript:void(0)">编辑</a></div>
                                             </div>
                                         </div>
                                     </div>
                                 </li>
+                                {% endfor %}
+
+
                             </ul>
                         </div>
                     </div>
@@ -221,16 +236,7 @@
                }
            })
         });
-           $('#pub-btn').click(function () {
-               layer.open({
-                  type: 2,
-                  title: '发布资源',
-                  shadeClose: true,
-                  shade: 0.4,
-                  area: ['600px', '600px'],
-                  content: ['/addres/','no'], //iframe的url
-                });
-           })
+
 
     });
 
@@ -260,6 +266,25 @@
         }
       });
     });
+    
+    $('.del a').click(function () {
+        var self = $(this);
+        self.parent().parent().parent().parent().remove();
+        var data_id = self.parent().attr('data-id');
+        $.ajax({
+            url:'/del_res/',
+            type:'POST',
+            data:{
+                'data_id':data_id
+            },
+            success:function (data) {
+                if(data['code'] === 200)
+                    alert('下架成功');
+            }
+        })
+    })
+
+
     </script>
 
     

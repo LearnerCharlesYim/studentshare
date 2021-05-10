@@ -1,18 +1,36 @@
 <div class="sidebar-wrapper">
                 <div class="title-group">
                     <span class="title">用户信息</span>
+                    {% if request.session.current_user %}
                     <a class="more" href="{% url 'profile' %}">更多</a>
+
+                    {% endif %}
+
                 </div>
+                {% if request.session.current_user %}
                 <div style="width: 345px;height: 60px;border-bottom: 1px solid #f2f2f2">
                     <div style="float: left;margin-left:15px;width: 50px;height: 50px;">
                          <a href="#">
-                        <img style="width: 100%" src="{% static 'images/avatar.jpg' %}" alt="">
+                        <img style="width: 100%" src="/static/images/{{ request.session.current_user.avatar }}" alt="">
                         </a>
                     </div>
                     <div style="line-height: 50px;font-size: 18px;margin-left: 10px;float: left">
                         <p><a href="{% url 'profile' %}">{{ request.session.current_user.username }}</a></p>
                     </div>
                 </div>
+                {% else %}
+                    <div style="width: 345px;height: 60px;border-bottom: 1px solid #f2f2f2">
+                    <div style="float: left;margin-left:15px;width: 50px;height: 50px;">
+                         <a href="#">
+                        <img style="width: 100%" src="{% static 'images/avatar.jpg' %}" alt="">
+                        </a>
+                    </div>
+                    <div style="line-height: 50px;font-size: 18px;margin-left: 10px;float: left">
+                        <p>请登录</p>
+                    </div>
+                </div>
+                {% endif %}
+
                 <div style="width: 345px;height: 46px;">
                     <div style="padding: 26px;overflow: hidden;text-align: center">
                         <ul style="list-style: none;">
@@ -25,7 +43,9 @@
                     </div>
                 </div>
                 <div style="padding: 20px;border-bottom: 1px solid #f2f2f2">
-                    <a href="{% url 'profile' %}" style="width: 100%" id="subres-btn" type="button" class="layui-btn layui-btn-danger">发布资源</a>
+                    {% if request.session.current_user %}
+                         <button style="width: 100%" id="subres-btn" type="button" class="layui-btn layui-btn-danger">发布资源</button>
+                    {% endif %}
                 </div>
 
                 <div style="background: #FFC0CB;height: 20px;"></div>

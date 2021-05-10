@@ -29,4 +29,7 @@ urlpatterns = [
     path('upload/',views.upload,name='upload'),
     path('repwd/',views.repwd,name='repwd'),
     path('addres/',views.addres,name='addres'),
+    path('resource/',views.resource_index,name='resource'),
+    path('upload_res/',views.upload_res,name='upload_res'),
+    path('del_res/',views.del_res,name='del_res')
 ] + static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

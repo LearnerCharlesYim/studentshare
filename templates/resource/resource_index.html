@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'css/course/course_index.css' %}">
+    <script>
+    $(function () {
+
+        $('.nav li').first().removeClass('active')
+
+});
+    </script>
+{% endblock %}
+{% block main %}
+ <div class="main">
+        <div class="course-nav">
+            <div class="nav-container">
+
+                <ul class="nav-list">
+                    <li class="active"><a href="#">全部</a></li>
+                    <li><a href="#">文档</a></li>
+                    <li><a href="#">音视频</a></li>
+                    <li><a href="#">二手物品</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="wrapper">
+            <ul class="course-list">
+                {% for res in resources %}
+                     <li>
+                    <a href="#">
+                        <div class="thumbnail-group">
+                            <img src="{{ res.img }}" alt="" class="thumbnial">
+                        </div>
+                        <div class="course-info">
+                            <p class="title">{{ res.name }}</p>
+                            <p class="author">{{ res.owner.username }}</p>
+                            <p class="price-group">
+                                <span class="pay">
+                                    {% if res.is_free %}
+                                    免费
+                                    {% endif %}
+                                </span>
+                            </p>
+                        </div>
+                    </a>
+                </li>
+
+                {% endfor %}
+            <li></li>
+            </ul>
+        </div>
+    </div>
+{% endblock %}

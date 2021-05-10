@@ -1,6 +1,6 @@
 from django.shortcuts import render,redirect,reverse
 from django.views.decorators.http import require_http_methods
-from .models import User
+from .models import User,Resources,Record
 import os
 from django.http import HttpResponse,JsonResponse
 # Create your views here.
@@ -52,8 +52,9 @@ def logout(request):
 
 def profile(request):
     user = User.objects.get(id=request.session['current_user']['id'])
+    resources = user.resources_set.filter(is_remove=False)
     if request.method == 'GET':
-        return render(request,'profile.html',context={'user':user})
+        return render(request,'profile.html',context={'user':user,'resources':resources})
     else:
         username = request.POST.get('username')
         if User.objects.filter(username=username) and user.username != username:
@@ -94,5 +95,43 @@ def repwd(request):
     user.save()
     return JsonResponse({'code':200,'message':'修改成功'})
 
+
 def addres(request):
-    return render(request,'addres.html')
+    user = User.objects.get(id=request.session['current_user']['id'])
+    if request.method == 'GET':
+        return render(request,'addres.html')
+    elif request.method == 'POST':
+        res_name = request.POST.get('res_name')
+        type = request.POST.get('type')
+        is_free = request.POST.get('is_free')
+        desc = request.POST.get('desc')
+        img = request.POST.get('img')
+        resource = Resources(name=res_name,desc=desc,type=int(type),is_free=True if is_free == '1' else False,img=img)
+        resource.owner = user
+        resource.save()
+        return JsonResponse({'code':200,'message':'添加成功'})
+
+
+def resource_index(request):
+    user = User.objects.get(id=request.session['current_user']['id'])
+    resources = user.resources_set.filter(is_remove=False)
+    return render(request,'resource/resource_index.html',context={'resources':resources})
+
+@require_http_methods(['POST'])
+def upload_res(request):
+    img = request.FILES.get('file')
+    from studentshare.settings import BASE_DIR
+    path = os.path.join(BASE_DIR,'static/images')
+
+    with open(os.path.join(path,img.name),'wb') as fp:
+        for chunk in img.chunks():
+            fp.write(chunk)
+    return JsonResponse({'code':0,'msg':img.name})
+
+@require_http_methods(['POST'])
+def del_res(request):
+    data_id = request.POST.get('data_id')
+    resource = Resources.objects.filter(id=data_id).first()
+    resource.is_remove = True
+    resource.save()
+    return JsonResponse({'code':200,'message':''})
