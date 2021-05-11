@@ -18,9 +18,26 @@ def login_required(func):
 
 def index(request):
     user = None
+    user_records = None
+    user_finish_records = None
+    resources = Resources.objects.filter(is_remove=False).order_by('-pub_time').all()[:3]
     if request.session.get('current_user'):
         user = User.objects.get(id=request.session['current_user']['id'])
-    return render(request,'news/index.html',context={'user':user})
+        records = Record.objects.all()
+        user_records = []
+        for record in records:
+            if (record.recipient_resources in user.resources_set.all()) or (
+                    record.sender_resources in user.resources_set.all()):
+                user_records.append(record)
+
+        user_finish_records = []
+        finish_records = RecordFinish.objects.all()
+        for record in finish_records:
+            if (record.recipient_resources in user.resources_set.all()) or (
+                    record.sender_resources in user.resources_set.all()):
+                user_finish_records.append(record)
+
+    return render(request,'news/index.html',context={'user':user,'user_records':user_records,'user_finish_records':user_finish_records,'resources':resources})
 
 @require_http_methods(["POST"])
 def signup(request):
@@ -74,18 +91,14 @@ def profile(request):
         records = Record.objects.all()
         user_records = []
         for record in records:
-            if record.recipient_resources or record.sender_resources in user.resources_set.all():
+            if (record.recipient_resources in user.resources_set.all()) or (record.sender_resources in user.resources_set.all()):
                 user_records.append(record)
 
         user_finish_records = []
         finish_records = RecordFinish.objects.all()
         for record in finish_records:
-            for i in record.sender_resources.all():
-                if i in user.resources_set.all():
-                    user_finish_records.append(record)
-            for j in record.recipient_resources.all():
-                if j in user.resources_set.all():
-                    user_finish_records.append(record)
+            if (record.recipient_resources in user.resources_set.all()) or (record.sender_resources in user.resources_set.all()):
+                user_finish_records.append(record)
 
         return render(request,'profile.html',context={'user':user,'resources':resources,'user_records':user_records,'user_finish_records':user_finish_records})
     else:
@@ -169,12 +182,21 @@ def editres(request):
 
 
 def resource_index(request):
-    # user = User.objects.get(id=request.session['current_user']['id'])
-    # resources = user.resources_set.filter(is_remove=False).order_by('-pub_time')
-    resources = Resources.objects.filter(is_remove=False).order_by('-pub_time')
+    type = request.GET.get('type',default='')
+    if type == '1':
+        resources = Resources.objects.filter(is_remove=False,type=1).order_by('-pub_time')
+    elif type == '2':
+        resources = Resources.objects.filter(is_remove=False,type=2).order_by('-pub_time')
+    elif type == '3':
+        resources = Resources.objects.filter(is_remove=False, type=3).order_by('-pub_time')
+    elif type == 'free':
+        resources = Resources.objects.filter(is_remove=False, is_free=True).order_by('-pub_time')
+    else:
+        resources = Resources.objects.filter(is_remove=False).order_by('-pub_time')
+
     sum = resources.count() % 4
 
-    return render(request,'resource/resource_index.html',context={'resources':resources,'sum':4-sum if sum != 0 else 0})
+    return render(request,'resource/resource_index.html',context={'resources':resources,'sum':4-sum if sum != 0 else 0,'type':type})
 
 @require_http_methods(['POST'])
 @login_required
@@ -196,6 +218,7 @@ def del_res(request):
     resource.is_remove = True
     resource.save()
     return JsonResponse({'code':200,'message':''})
+
 
 @login_required
 def res_detail(request,id):
@@ -236,11 +259,34 @@ def trading(request):
 def access_trade(request):
     data_id = request.POST.get('data_id')
     record = Record.objects.get(id=data_id)
+
+    temp = record.sender_resources.owner
+    record.sender_resources.owner = record.recipient_resources.owner
+    record.recipient_resources.owner = temp
+    record.sender_resources.save()
+    record.recipient_resources.save()
+
     record_finish = RecordFinish(is_success=True)
     record_finish.save()
-    record_finish.sender_resources.add(record.sender_resources)
-    record_finish.recipient_resources.add(record.recipient_resources)
+    record_finish.recipient_resources = record.recipient_resources
+    record_finish.sender_resources = record.sender_resources
+    record_finish.save()
 
     record.delete()
     return JsonResponse({'code':200,'message':''})
 
+@require_http_methods(['POST'])
+def cancel_trade(request):
+    data_id = request.POST.get('data_id')
+    record = Record.objects.get(id=data_id)
+    record.delete()
+    return JsonResponse({'code':200,'message':''})
+
+@require_http_methods(['POST'])
+def free_get(request):
+    user = User.objects.get(id=request.session.get('current_user')['id'])
+    data_id = request.POST.get('data_id')
+    resource = Resources.objects.get(id=data_id)
+    resource.owner = user
+    resource.save()
+    return JsonResponse({'code': 200, 'message': ''})

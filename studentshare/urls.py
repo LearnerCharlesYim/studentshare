@@ -35,6 +35,8 @@ urlpatterns = [
     path('edit_res/',views.editres,name='edit_res'),
     path('resource/detail/<id>/',views.res_detail,name='res_detail'),
     path('trading/',views.trading,name='trading'),
-    path('access/',views.access_trade,name='access_trade')
+    path('access/',views.access_trade,name='access_trade'),
+    path('cancel/',views.cancel_trade,name='cancel_trade'),
+    path('free/',views.free_get,name='free_get'),
 ] + static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
 

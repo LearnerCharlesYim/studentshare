@@ -42,7 +42,11 @@
 
                             </div>
                                 {% if resource.owner != user %}
-                                       <button data-id="{{ resource.id }}" style="float: right" id="trade-btn" class="layui-btn layui-btn-{% if resource.receive_record.status == 1 or resource.send_record.status == 1 %}disabled{% else %}normal{% endif %}" >申请交易</button>
+                                        {% if resource.is_free %}
+                                            <button data-id="{{ resource.id }}" style="float: right" id="free-btn" class="layui-btn layui-btn-normal" >免费获取</button>
+                                        {% else %}
+                                            <button data-id="{{ resource.id }}" style="float: right" id="trade-btn" class="layui-btn layui-btn-{% if resource.receive_record.status == 1 or resource.send_record.status == 1 %}disabled{% else %}normal{% endif %}" >申请交易</button>
+                                        {% endif %}
                                 {% endif %}
                         </div>
 
@@ -79,6 +83,25 @@
         });
         {% endif %}
 
+        $('#free-btn').click(function () {
+            var data_id = $(this).attr('data-id');
+            $.ajax({
+                url:'/free/',
+                type:'POST',
+                data:{
+                    'data_id':data_id
+                },
+                success:function (data) {
+
+
+                     layer.msg('获取成功',{icon:1,time:1000},function() {
+                           window.location.reload();
+                       })
+
+                }
+
+            })
+        })
     });
 });
     </script>

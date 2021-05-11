@@ -5,6 +5,7 @@
     <li style="margin-top: 10px">交易对象:{{ resource.name |truncatechars:20 }}</li>
     <li style="margin-top: 10px">资源分类:{% if resource.type == 1 %}文档{% elif resource.type == 2 %}音视频{% elif resource.type == 2 %}二手物品{% endif %}</li>
     <li style="margin-top: 10px">资源拥有者:{{ resource.owner.username }}</li>
+
     <li style="margin-top: 10px">选择交易资源:
         <select  style="width:100px" name="res">
         <option value="">请选择</option>

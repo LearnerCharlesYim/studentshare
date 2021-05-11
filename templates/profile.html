@@ -137,25 +137,89 @@
 
 
                     <div class="layui-tab-item">
-                    <ul>
-                        {% for user_record in user_records %}
-                            <li data-id="{{ user_record.id }}">
 
-                            交易时间：{{ user_record.trade_time| date:"Y/m/d G:i:s" }}
-                            资源筹码：{{ user_record.sender_resources.name |truncatechars:10}}
-                            交易资源：{{ user_record.recipient_resources.name |truncatechars:10}}
-                            交易状态：{% if user_record.status == 1 %}交易进行中{% endif %}
-                            {% if user_record.recipient_resources.owner == user %}
-                                <button class="access">同意交易</button>
-                                <button class="cancel">取消交易</button>
-                            {% endif %}
-                            </li>
+                            <div class="layui-form">
+                                  <table class="layui-table">
+                                    <colgroup>
+                                      <col width="50">
+                                      <col width="160">
+                                      <col width="170">
+                                      <col width="160">
+                                      <col width="120">
+                                      <col>
+                                    </colgroup>
+                                    <thead>
+                                      <tr>
+                                        <th>序号</th>
+                                        <th>交易资源</th>
+                                        <th>交易筹码</th>
+                                        <th>交易时间</th>
+                                        <th>交易状态</th>
+                                        <th>操作</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for user_record in user_records %}
+                                     <tr data-id="{{ user_record.id }}">
+                                        <td>{{ forloop.counter }}</td>
+                                        <td>{{ user_record.recipient_resources.name |truncatechars:10}}</td>
+                                        <td>{{ user_record.sender_resources.name |truncatechars:10}}</td>
+                                        <td>{{ user_record.trade_time| date:"Y/m/d G:i:s" }}</td>
+                                        <td>{% if user_record.status == 1 %}交易进行中{% endif %}</td>
+                                        <td>
+                                            {% if user_record.recipient_resources.owner == user %}
+                                                <button class="layui-btn layui-btn-xs access" >同意</button>
+                                                <button class="layui-btn layui-btn-xs cancel">取消</button>
+                                            {% endif %}
+                                            {% if user_record.sender_resources.owner == user %}
 
-                        {% endfor %}
-                    </ul>
+                                             <button  type="button" class="layui-btn layui-btn-xs cancel">取消申请</button>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+
+                                    </tbody>
+                                  </table>
+                                </div>
+
                     </div>
                     <div class="layui-tab-item">
 
+                        <div class="layui-form">
+                                  <table class="layui-table">
+                                    <colgroup>
+                                      <col width="50">
+                                      <col width="160">
+                                      <col width="170">
+                                      <col width="160">
+                                      <col width="120">
+                                      <col>
+                                    </colgroup>
+                                    <thead>
+                                      <tr>
+                                        <th>序号</th>
+                                        <th>交易资源</th>
+                                        <th>交易筹码</th>
+                                        <th>完成时间</th>
+                                        <th>交易状态</th>
+
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for record in user_finish_records %}
+                                        <tr>
+                                        <td>{{ forloop.counter }}</td>
+                                        <td>{{ record.recipient_resources.name |truncatechars:10}}</td>
+                                        <td>{{ record.sender_resources.name |truncatechars:10}}</td>
+                                        <td>{{ record.finish_time| date:"Y/m/d G:i:s" }}</td>
+                                        <td>{% if record.is_success %}交易成功{% else %}交易失败{% endif %}</td>
+                                        </tr>
+                                    {% endfor %}
+
+                                    </tbody>
+                                  </table>
+                                </div>
                     </div>
                   </div>
                 </div>
@@ -258,7 +322,7 @@
     
            $('.access').click(function () {
                var self = $(this);
-               var data_id = self.parent().attr('data-id');
+               var data_id = self.parent().parent().attr('data-id');
                $.ajax({
                    url:'/access/',
                    type:'POST',
@@ -267,13 +331,32 @@
                    },
                    success:function (data) {
                        if(data['code'] === 200){
-                           self.parent().remove();
+                           self.parent().parent().remove();
                            layer.msg('交易成功',{icon:1});
 
                        }
                    }
                })
-           })
+           });
+
+        $('.cancel').click(function () {
+            var self = $(this);
+            var data_id = self.parent().parent().attr('data-id');
+            $.ajax({
+                url:'/cancel/',
+                type:'POST',
+                data:{
+                    'data_id':data_id
+                },
+                success:function (data) {
+                       if(data['code'] === 200){
+                       self.parent().parent().remove();
+                       layer.msg('取消成功',{icon:1});
+
+                   }
+                }
+            })
+        })
 
     });
 

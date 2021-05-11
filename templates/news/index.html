@@ -42,53 +42,40 @@
                 <div class="list-outer-group">
                     <ul class="list-tab">
                         <li class="active"><a href="#">最新资源</a></li>
-                        <li><a href="#">文档</a></li>
-                        <li><a href="#">音频视频</a></li>
-                        <li><a href="#">二手市场</a></li>
 
                     </ul>
                     <ul class="list-inner-group">
-                        <li>
+                        {% for resource in resources %}
+                             <li>
                             <div class="thumbnail-group">
-                                <a href="#">
-                                    <img src="http://static-image.xfz.cn/1516169692_914.jpg-website.news.list" alt="">
+                                <a href="{% url 'res_detail' id=resource.id %}">
+                                    <img src="{{ resource.img }}" alt="">
                                 </a>
                             </div>
                             <div class="news-group">
                                 <p class="title">
-                                    <a href="#">王健林卖掉进军海外首个项目:17亿售伦敦ONE六成股权</a>
+                                    <a href="{% url 'res_detail' id=resource.id %}">{{ resource.name|truncatechars:20 }}</a>
                                 </p>
                                 <p class="desc">
-                                    外界关于万达要出售此前在海外投资项目的消息一直不断。
+                                    {{ resource.desc |truncatechars:50 }}
                                 </p>
                                 <p class="more">
-                                   <span class="category">深度报道</span>
-                                    <span class="pub-time">1小时前</span>
-                                    <span class="author">知了课堂</span>
+                                   <span class="category">
+                                       {% if resource.type == 1 %}
+                                           <a href="{% url 'resource' %}?type=1">文档</a>
+                                           {% elif resource.type == 2 %}
+                                           <a href="{% url 'resource' %}?type=2">音视频</a>
+                                           {% elif resource.type == 3 %}
+                                           <a href="{% url 'resource' %}?type=3">二手物品</a>
+                                       {% endif %}
+                                   </span>
+                                    <span class="pub-time">{{ resource.pub_time | date:"Y/m/d G:i:s" }}</span>
+                                    <span class="author">{{ resource.owner.username }}</span>
                                 </p>
                             </div>
                         </li>
-                        <li>
-                            <div class="thumbnail-group">
-                                <a href="#">
-                                    <img src="http://static-image.xfz.cn/1516010894_546.jpg-website.news.list" alt="">
-                                </a>
-                            </div>
-                            <div class="news-group">
-                                <p class="title">
-                                    <a href="#">
-张小龙演讲全文：小程序、公众号将会有哪些变化？</a>
-                                </p>
-                                <p class="desc">
-                                    我认为探索线下的精彩生活，这是我们下一步想要尝试的一个方向。
-                                </p>
-                                <p class="more">
-                                   <span class="category">热点</span>
-                                    <span class="pub-time">2小时前</span>
-                                    <span class="author">知了课堂</span>
-                                </p>
-                            </div>
-                        </li>
+                        {% endfor %}
+
                     </ul>
                     <div class="load-more-group">
                         <button class="load-more">查看更多</button>
@@ -98,4 +85,9 @@
             {% include 'sidebar.html' %}
         </div>
     </div>
+    <script>
+    $('.load-more').click(function () {
+        window.location.href = '/resource/'
+    })
+    </script>
 {% endblock %}

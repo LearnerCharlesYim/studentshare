@@ -26,7 +26,6 @@ class Resources(models.Model):
 
 class Record(models.Model):
     status = models.IntegerField(choices=((1, '进行中'), (0, '已完成')))
-
     trade_time = models.DateTimeField(auto_now_add=True)
     sender_resources = models.OneToOneField('Resources',null=True,on_delete=models.SET_NULL,related_name='send_record')
     recipient_resources = models.OneToOneField('Resources',null=True,on_delete=models.SET_NULL,related_name='receive_record')
@@ -35,8 +34,8 @@ class Record(models.Model):
 class RecordFinish(models.Model):
     is_success = models.BooleanField(default=False)
     finish_time = models.DateTimeField(auto_now_add=True)
-    sender_resources = models.ManyToManyField('Resources',related_name='send_records')
-    recipient_resources = models.ManyToManyField('Resources',related_name='receive_records')
+    sender_resources = models.ForeignKey('Resources',null=True,on_delete=models.CASCADE,related_name='send_records')
+    recipient_resources = models.ForeignKey('Resources',null=True,on_delete=models.CASCADE,related_name='receive_records')
 
 
 

@@ -41,9 +41,9 @@
                         <ul style="list-style: none;">
                             <li style="float: left"><a href="">发布 {{ user.resources_set.all | length }}</a></li>
                             <li style="float: left;margin-left: 20px;color: #f2f2f2">|</li>
-                            <li style="float: left;margin-left: 20px"><a href="">交易完成 3</a></li>
+                            <li style="float: left;margin-left: 20px"><a href="">交易完成 {{ user_finish_records | length }}</a></li>
                             <li style="float: left;margin-left: 20px;color: #f2f2f2">|</li>
-                            <li style="float: left;margin-left: 20px"><a href="">交易中 3</a></li>
+                            <li style="float: left;margin-left: 20px"><a href="">交易中{{ user_records | length }}</a></li>
                         </ul>
                     </div>
                 </div>
