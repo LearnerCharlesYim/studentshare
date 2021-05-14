@@ -1,0 +1,22 @@
+{% extends 'cms/base.html' %}
+
+{% block content %}
+    <div style="width:700px">
+    <div style="width:700px;overflow: hidden">
+<h1 style="float: left">轮播图管理</h1>
+<button style="margin-top: 10px;float: right" type="button" class="layui-btn layui-btn-normal">新增轮播图</button>
+</div>
+
+     <div style="margin-top: 20px" class="layui-panel">
+         <span style="cursor: pointer;float: right"><i class="layui-icon layui-icon-close close-btn"></i>  </span>
+        <div style="padding: 30px 30px;">
+            <img style="width: 650px;height: 380px" src="{% static 'images/1.jpg' %}" alt="">
+        </div>
+         <input type="text" placeholder="名称">
+         <input type="text" placeholder="优先级">
+      </div>
+
+    </div>
+
+
+{% endblock %}

@@ -52,5 +52,6 @@ urlpatterns = [
     path('cms/trade/',cms_views.trade_manage,name='trade'),
     path('cms/trade_access/',cms_views.trade_access,name='trade_access'),
     path('cms/trade_cancel/',cms_views.trade_cancel,name='trade_cancel'),
+    path('cms/banner/',cms_views.banner,name='banner'),
 ] + static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
 

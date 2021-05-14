@@ -104,3 +104,7 @@ def trade_cancel(request):
         record = Record.objects.get(id=id)
         record.delete()
         return JsonResponse({'code':200,'message':''})
+
+def banner(request):
+    user = User.objects.get(id=request.session['current_user']['id'])
+    return render(request,'cms/banners.html',context={'user':user})
