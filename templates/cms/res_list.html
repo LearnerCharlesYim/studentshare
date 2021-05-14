@@ -1,0 +1,106 @@
+{% extends 'cms/base.html' %}
+{% block content %}
+<h1>资源管理</h1>
+<div class="layui-form">
+  <table class="layui-table">
+    <colgroup>
+      <col width="60">
+      <col width="150">
+      <col width="200">
+      <col width="70">
+      <col width="130">
+      <col width="65">
+      <col width="70">
+      <col width="70">
+
+      <col>
+    </colgroup>
+    <thead>
+      <tr>
+        <th>序号</th>
+        <th>资源名称</th>
+        <th>资源描述</th>
+        <th>图片描述</th>
+        <th>类型</th>
+        <th>是否免费</th>
+        <th>发布者</th>
+        <th>发布时间</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for resource in resources %}
+        <tr style="position: relative" data-id="{{ resource.id }}">
+        <td>{{ forloop.counter }}</td>
+        <td>{{ resource.name |truncatechars:10}}</td>
+        <td>{{ resource.desc|truncatechars:10}}</td>
+        <td>
+            <img class="res-img" style="width: 50px;height:50px;" src="{{ resource.img}}" alt="">
+        </td>
+        <td>
+            <select name="type">
+              <option value ="1"{% if resource.type == 1 %}selected{% endif %}>文档</option>
+              <option value ="2"{% if resource.type == 2 %}selected{% endif %}>音视频</option>
+              <option value="3"{% if resource.type == 3 %}selected{% endif %}>二手物品</option>
+            </select>
+        </td>
+        <td>{% if resource.is_free %}是{% else %}否{% endif %}</td>
+        <td>{{ resource.owner.username }}</td>
+        <td>{{ resource.pub_time |date:"Y/m/d G:i:s" }}</td>
+        <td>
+            <button type="button" class="layui-btn layui-btn-sm layui-btn-default edit">修改分类</button>
+            <button type="button" class="layui-btn layui-btn-sm layui-btn-default remove">下架</button>
+        </td>
+        </tr>
+    {% endfor %}
+
+    </tbody>
+  </table>
+</div>
+        <script>
+
+    layui.use(['element', 'layer'], function() {
+            var $ = layui.jquery
+            , element = layui.element
+            , layer = layui.layer;
+
+        $('.layui-table').on('click','.edit',function () {
+           var self = $(this);
+           var data_id = self.parent().parent().attr('data-id');
+           var type = self.parent().parent().find('select[name="type"]').val();
+            $.ajax({
+               url:'/cms/edit/',
+               type:'POST',
+               data:{
+                   'id':data_id,
+                   'type':type
+               },
+               success:function (data) {
+                   if(data['code'] === 200){
+                       layer.msg('修改成功',{icon:1});
+
+                   }
+               }
+           })
+        });
+
+        $('.layui-table').on('click','.remove',function () {
+           var self = $(this);
+           var data_id = self.parent().parent().attr('data-id');
+            $.ajax({
+               url:'/cms/remove/',
+               type:'POST',
+               data:{
+                'id':data_id
+               },
+               success:function (data) {
+                   if(data['code'] === 200){
+                       layer.msg('下架成功',{icon:1});
+                       self.parent().parent().remove();
+                   }
+               }
+           })
+        });
+    });
+    </script>
+{% endblock %}

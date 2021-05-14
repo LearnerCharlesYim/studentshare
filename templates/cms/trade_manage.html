@@ -1,0 +1,103 @@
+{% extends 'cms/base.html' %}
+{% block content %}
+<h1>交易管理</h1>
+<div class="layui-form">
+  <table class="layui-table">
+    <colgroup>
+      <col width="60">
+      <col width="150">
+      <col width="150">
+      <col width="150">
+      <col width="150">
+      <col width="160">
+      <col>
+    </colgroup>
+    <thead>
+      <tr>
+        <th>序号</th>
+        <th>交易资源</th>
+        <th>交易筹码</th>
+          <th>交易发起方</th>
+          <th>交易接受方</th>
+        <th>交易时间</th>
+        <th>交易状态</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for record in records %}
+        <tr data-id="{{ record.id }}">
+        <td>{{ forloop.counter }}</td>
+        <td>{{ record.recipient_resources.name |truncatechars:10}}</td>
+        <td>{{ record.sender_resources.name |truncatechars:10}}</td>
+        <td>{{ record.sender_resources.owner.username |truncatechars:10}}</td>
+        <td>{{ record.recipient_resources.owner.username |truncatechars:10}}</td>
+        <td>{{ record.trade_time|date:"Y/m/d G:i:s"}}</td>
+        <td>{% if record.status == 1 %}
+              <span class="layui-badge">进行中</span>
+        {% else %}
+            <span class="layui-badge layui-bg-green">已完成</span>
+        {% endif %}</td>
+        <td>
+            <button type="button" data-id="{{ record.status }}" class="layui-btn layui-btn-sm layui-btn-default layui-btn{% if record.status == 1 %}-disabled{% endif %} access">审核通过</button>
+            <button type="button" class="layui-btn layui-btn-sm layui-btn-danger cancel">取消交易</button>
+
+        </td>
+
+        </tr>
+    {% endfor %}
+
+
+    </tbody>
+  </table>
+</div>
+    <script>
+    layui.use(['element', 'layer'], function() {
+            var $ = layui.jquery
+            , element = layui.element
+            , layer = layui.layer;
+
+
+        $('.layui-table').on('click','.access',function () {
+           var self = $(this);
+           if(self.attr('data-id') === '1'){
+               return;
+           }
+           var data_id = self.parent().parent().attr('data-id');
+            $.ajax({
+               url:'/cms/trade_access/',
+               type:'POST',
+               data:{
+                'id':data_id
+               },
+               success:function (data) {
+                   if(data['code'] === 200){
+                       layer.msg('交易成功',{icon:1});
+                       self.parent().parent().remove();
+
+                   }
+               }
+           })
+        });
+
+
+        $('.layui-table').on('click','.cancel',function () {
+           var self = $(this);
+           var data_id = self.parent().parent().attr('data-id');
+            $.ajax({
+               url:'/cms/trade_cancel/',
+               type:'POST',
+               data:{
+                'id':data_id
+               },
+               success:function (data) {
+                   if(data['code'] === 200){
+                       layer.msg('取消成功',{icon:1});
+                       self.parent().parent().remove();
+                   }
+               }
+           })
+        });
+    });
+    </script>
+    {% endblock %}

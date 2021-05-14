@@ -17,26 +17,40 @@ Including another URLconf
 from django.urls import path
 from django.conf.urls.static import static
 from django.conf import settings
-from front import views
-
+from front import views as front_views
+from cms import views as cms_views
 
 urlpatterns = [
-    path('', views.index,name='index'),
-    path('signup/',views.signup,name='signup'),
-    path('login/',views.login,name='login'),
-    path('logout/',views.logout,name='logout'),
-    path('profile/',views.profile,name='profile'),
-    path('upload/',views.upload,name='upload'),
-    path('repwd/',views.repwd,name='repwd'),
-    path('addres/',views.addres,name='addres'),
-    path('resource/',views.resource_index,name='resource'),
-    path('upload_res/',views.upload_res,name='upload_res'),
-    path('del_res/',views.del_res,name='del_res'),
-    path('edit_res/',views.editres,name='edit_res'),
-    path('resource/detail/<id>/',views.res_detail,name='res_detail'),
-    path('trading/',views.trading,name='trading'),
-    path('access/',views.access_trade,name='access_trade'),
-    path('cancel/',views.cancel_trade,name='cancel_trade'),
-    path('free/',views.free_get,name='free_get'),
+    path('', front_views.index,name='index'),
+    path('signup/',front_views.signup,name='signup'),
+    path('login/',front_views.login,name='login'),
+    path('logout/',front_views.logout,name='logout'),
+    path('profile/',front_views.profile,name='profile'),
+    path('upload/',front_views.upload,name='upload'),
+    path('repwd/',front_views.repwd,name='repwd'),
+    path('addres/',front_views.addres,name='addres'),
+    path('resource/',front_views.resource_index,name='resource'),
+    path('upload_res/',front_views.upload_res,name='upload_res'),
+    path('del_res/',front_views.del_res,name='del_res'),
+    path('edit_res/',front_views.editres,name='edit_res'),
+    path('resource/detail/<id>/',front_views.res_detail,name='res_detail'),
+    path('trading/',front_views.trading,name='trading'),
+    path('access/',front_views.access_trade,name='access_trade'),
+    path('cancel/',front_views.cancel_trade,name='cancel_trade'),
+    path('free/',front_views.free_get,name='free_get'),
+    path('cms/',cms_views.index,name='cms_index'),
+    path('cms/user/',cms_views.user_manage,name='user_manage'),
+    path('cms/banned/',cms_views.banned_user,name='banned_user'),
+    path('cms/liftbanned/',cms_views.liftbanned_user,name='liftbanned_user'),
+    path('cms/check/',cms_views.wait_to_access,name='wait_to_access'),
+    path('cms/check/',cms_views.wait_to_access,name='wait_to_access'),
+    path('cms/access/',cms_views.access_res,name='access_res'),
+    path('cms/delete/',cms_views.delete_res,name='delete_res'),
+    path('cms/resources/',cms_views.res_list,name='res_list'),
+    path('cms/edit/',cms_views.edit_res,name='edit_res'),
+    path('cms/remove/',cms_views.remove_res,name='remove_res'),
+    path('cms/trade/',cms_views.trade_manage,name='trade'),
+    path('cms/trade_access/',cms_views.trade_access,name='trade_access'),
+    path('cms/trade_cancel/',cms_views.trade_cancel,name='trade_cancel'),
 ] + static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
 

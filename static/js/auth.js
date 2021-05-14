@@ -71,8 +71,10 @@ $(function () {
                 },
                 success:function (data) {
                     if(data['code'] === 200){
-                        $(".mask-wrapper").hide();
-                        layer.msg('注册成功', {icon: 1});
+                        layer.msg('注册成功', {icon: 1,time:800},function () {
+                            $('.scroll-wrapper').css({'left':0});
+                            // $(".mask-wrapper").show();
+                        });
 
                     }else{
                        layer.msg(data['message'],{icon:2});
@@ -108,11 +110,6 @@ $(function () {
                         setTimeout(function () {
                             window.location.reload();
                         },800);
-
-
-
-
-
 
                     }else{
                        layer.msg(data['message'],{icon:2});

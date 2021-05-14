@@ -59,38 +59,35 @@
                         <span class="title">热门推荐</span>
                     </div>
                     <ul class="hot-list-group">
-                        <li style="margin-bottom: 10px">
+                        {% for resource in resources|slice:":2" %}
+                           <li style="margin-bottom: 10px">
                             <div class="left-group">
                                 <p class="title">
-                                    <a href="#">王健林卖掉进军海外首个项目:17亿售伦敦ON...</a>
+                                    <a href="{% url 'res_detail' id=resource.id%}">{{ resource.name }}</a>
                                 </p>
                                 <p class="more">
-                                    <span class="category">深度报道</span>
-                                    <span class="pub-time">1小时前</span>
+                                    <span class="category">
+                                     {% if resource.type == 1 %}
+                                           <a href="{% url 'resource' %}?type=1">文档</a>
+                                           {% elif resource.type == 2 %}
+                                           <a href="{% url 'resource' %}?type=2">音视频</a>
+                                           {% elif resource.type == 3 %}
+                                           <a href="{% url 'resource' %}?type=3">二手物品</a>
+                                       {% endif %}
+                                    </span>
+                                    <span class="pub-time">{{ resource.pub_time| date:"Y/m/d G:i:s" }}</span>
                                 </p>
                             </div>
                             <div class="right-group">
                                 <a href="#">
-                                    <img src="http://static-image.xfz.cn/1516169692_914.jpg-website.news.list" alt="">
+                                    <img src="{{ resource.img }}" alt="">
                                 </a>
                             </div>
                         </li>
-                        <li style="margin-bottom: 10px">
-                            <div class="left-group">
-                                <p class="title">
-                                    <a href="#">王健林卖掉进军海外首个项目:17亿售伦敦ON...</a>
-                                </p>
-                                <p class="more">
-                                    <span class="category">深度报道</span>
-                                    <span class="pub-time">1小时前</span>
-                                </p>
-                            </div>
-                            <div class="right-group">
-                                <a href="#">
-                                    <img src="http://static-image.xfz.cn/1516169692_914.jpg-website.news.list" alt="">
-                                </a>
-                            </div>
-                        </li>
+                        {% endfor %}
+
+
+
                     </ul>
                 </div>
             </div>

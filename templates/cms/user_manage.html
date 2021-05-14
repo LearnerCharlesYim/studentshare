@@ -1,0 +1,108 @@
+{% extends 'cms/base.html' %}
+{% block content %}
+<h1>用户管理界面</h1>
+<div style="width: 800px" class="layui-form">
+  <table class="layui-table">
+    <colgroup>
+      <col width="70">
+      <col width="100">
+      <col width="100">
+      <col width="100">
+      <col width="100">
+      <col width="100">
+      <col>
+    </colgroup>
+    <thead>
+      <tr>
+        <th>序号</th>
+        <th>用户名</th>
+        <th>真实姓名</th>
+        <th>联系电话</th>
+        <th>状态</th>
+        <th>身份</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for front_user in front_users %}
+        <tr data-id="{{ front_user.id }}">
+        <td>{{ forloop.counter }}</td>
+        <td>{{ front_user.username }}</td>
+        <td>{{ front_user.realname |default:"暂无"}}</td>
+        <td>{{ front_user.telephone |default:"暂无"}}</td>
+        <td>{% if front_user.is_banned %}
+              <span class="layui-badge">禁用</span>
+        {% else %}
+            <span class="layui-badge layui-bg-green">可用</span>
+        {% endif %}</td>
+        <td>{% if front_user.is_admin %}管理员{% else %}普通用户{% endif %}</td>
+        <td>
+            {% if not front_user.is_admin %}
+                {% if front_user.is_banned %}
+                <button type="button" class="layui-btn layui-btn-sm layui-btn-default liftbanned">移除黑名单</button>
+                    {% else %}
+                    <button type="button" class="layui-btn layui-btn-sm layui-btn-danger banned">禁用</button>
+                {% endif %}
+
+            {% endif %}
+
+        </td>
+
+        </tr>
+    {% endfor %}
+
+
+    </tbody>
+  </table>
+</div>
+    <script>
+    layui.use(['element', 'layer'], function() {
+            var $ = layui.jquery
+            , element = layui.element
+            , layer = layui.layer;
+
+
+        $('.layui-table').on('click','.banned',function () {
+           var self = $(this);
+           var data_id = self.parent().parent().attr('data-id');
+            $.ajax({
+               url:'/cms/banned/',
+               type:'POST',
+               data:{
+                'id':data_id
+               },
+               success:function (data) {
+                   if(data['code'] === 200){
+                       layer.msg('禁用成功',{icon:1});
+                       var td = self.parent().prev().prev();
+                       td.html('<span class="layui-badge">禁用</span>');
+                       self.parent().html('<button type="button" class="layui-btn layui-btn-sm layui-btn-default liftbanned">移除黑名单</button>')
+
+                   }
+               }
+           })
+        });
+
+        $('.layui-table').on('click','.liftbanned',function () {
+           var self = $(this);
+           var data_id = self.parent().parent().attr('data-id');
+            $.ajax({
+               url:'/cms/liftbanned/',
+               type:'POST',
+               data:{
+                'id':data_id
+               },
+               success:function (data) {
+                   if(data['code'] === 200){
+                       layer.msg('解禁成功',{icon:1});
+                       var td = self.parent().prev().prev();
+                       td.html('<span class="layui-badge layui-bg-green">可用</span>');
+                       self.parent().html('<button type="button" class="layui-btn layui-btn-sm layui-btn-danger banned">禁用</button>')
+
+                   }
+               }
+           })
+        });
+    });
+    </script>
+    {% endblock %}

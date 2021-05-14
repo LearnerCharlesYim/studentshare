@@ -22,6 +22,7 @@ class Resources(models.Model):
     owner = models.ForeignKey('User',on_delete=models.CASCADE)
     is_remove = models.BooleanField(default=False)
     is_free = models.BooleanField(default=False)
+    is_access = models.BooleanField(default=False)
 
 
 class Record(models.Model):
@@ -36,6 +37,8 @@ class RecordFinish(models.Model):
     finish_time = models.DateTimeField(auto_now_add=True)
     sender_resources = models.ForeignKey('Resources',null=True,on_delete=models.CASCADE,related_name='send_records')
     recipient_resources = models.ForeignKey('Resources',null=True,on_delete=models.CASCADE,related_name='receive_records')
+    sender = models.ForeignKey('User',null=True,on_delete=models.CASCADE,related_name='send_records')
+    receiver = models.ForeignKey('User',null=True,on_delete=models.CASCADE,related_name='receive_records')
 
 
 

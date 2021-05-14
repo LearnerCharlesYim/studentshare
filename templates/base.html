@@ -41,7 +41,7 @@
                     <i class="triangle"></i>
                     <a href="{% url 'profile' %}">个人中心</a>
                          {% if request.session.current_user.is_admin %}
-                        <a href="">管理系统</a>
+                        <a href="{% url 'cms_index' %}">管理系统</a>
                          {% endif %}
                     <a href="{% url 'logout' %}">退出登录</a>
                 </div>

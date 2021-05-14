@@ -85,6 +85,11 @@
            var is_free = $("input[name='free']:checked").val();
            var desc = $('#desc').val();
            var img = $('#demo2').attr('src');
+               console.log(img);
+               if(img === undefined){
+               layer.msg('资源图片不能为空',{icon:2});
+               return;
+           }
 
            $.ajax({
                url:'/addres/',
@@ -99,7 +104,8 @@
                success:function (data) {
                    if(data['code'] === 200){
                        layer.msg(data.message,{icon:1,time:1000},function() {
-                           window.parent.location = '/resource/'
+                           var index = parent.layer.getFrameIndex(window.name);    // 获取当frame标识
+                           parent.layer.close(index);                              // 关闭当前页
                        })
                    }
                }

@@ -15,10 +15,11 @@
             <div class="nav-container">
 
                 <ul class="nav-list">
-                    <li class="active"><a href="#">全部</a></li>
-                    <li><a href="#">文档</a></li>
-                    <li><a href="#">音视频</a></li>
-                    <li><a href="#">二手物品</a></li>
+                    <li {% if type == '' %}class="active"{% endif %}><a href="{% url 'resource' %}">全部</a></li>
+                    <li {% if type == '1' %}class="active"{% endif %}><a href="{% url 'resource' %}?type=1">文档</a></li>
+                    <li {% if type == '2' %}class="active"{% endif %}><a href="{% url 'resource' %}?type=2">音视频</a></li>
+                    <li {% if type == '3' %}class="active"{% endif %}><a href="{% url 'resource' %}?type=3">二手物品</a></li>
+                    <li {% if type == 'free' %}class="active"{% endif %}><a href="{% url 'resource' %}?type=free">免费</a></li>
                 </ul>
             </div>
         </div>

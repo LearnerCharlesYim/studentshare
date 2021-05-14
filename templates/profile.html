@@ -105,6 +105,9 @@
                                             <div style="margin-top: 6px;margin-left: 20px;height: 130px">
                                                 <p style="font-size: 20px">
                                                     {{ res.name }}
+                                                {% if not res.is_access %}
+                                                <span class="layui-badge">待审核</span>
+                                                {% endif %}
                                                     {% if res.is_free %}
                                                     <span class="layui-badge">免费</span>
                                                     {% endif %}
@@ -190,9 +193,9 @@
                                   <table class="layui-table">
                                     <colgroup>
                                       <col width="50">
-                                      <col width="160">
-                                      <col width="170">
-                                      <col width="160">
+                                      <col width="120">
+                                      <col width="120">
+                                      <col width="120">
                                       <col width="120">
                                       <col>
                                     </colgroup>
@@ -201,6 +204,8 @@
                                         <th>序号</th>
                                         <th>交易资源</th>
                                         <th>交易筹码</th>
+                                        <th>交易发起方</th>
+                                        <th>交易接受方</th>
                                         <th>完成时间</th>
                                         <th>交易状态</th>
 
@@ -212,6 +217,8 @@
                                         <td>{{ forloop.counter }}</td>
                                         <td>{{ record.recipient_resources.name |truncatechars:10}}</td>
                                         <td>{{ record.sender_resources.name |truncatechars:10}}</td>
+                                        <td>{{ record.sender.username }}</td>
+                                        <td>{{ record.receiver.username }}</td>
                                         <td>{{ record.finish_time| date:"Y/m/d G:i:s" }}</td>
                                         <td>{% if record.is_success %}交易成功{% else %}交易失败{% endif %}</td>
                                         </tr>
@@ -332,7 +339,7 @@
                    success:function (data) {
                        if(data['code'] === 200){
                            self.parent().parent().remove();
-                           layer.msg('交易成功',{icon:1});
+                           layer.msg('管理员审核后通过',{icon:1});
 
                        }
                    }
