@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from front.models import User,Resources,Record,RecordFinish
 from django.http import  JsonResponse
+from .models import Banner
 # Create your views here.
 
 def index(request):
@@ -106,5 +107,46 @@ def trade_cancel(request):
         return JsonResponse({'code':200,'message':''})
 
 def banner(request):
-    user = User.objects.get(id=request.session['current_user']['id'])
-    return render(request,'cms/banners.html',context={'user':user})
+    if request.method == 'GET':
+        user = User.objects.get(id=request.session['current_user']['id'])
+        banners = Banner.objects.all()
+        return render(request,'cms/banners.html',context={'user':user,'banners':banners})
+    else:
+        name = request.POST.get('name')
+        priority = request.POST.get('priority')
+        path = request.POST.get('path')
+        banner = Banner(name=name,priority=priority,path=path)
+        banner.save()
+        return JsonResponse({'code':200,'message':''})
+
+
+def upload_banner(request):
+    if request.method == 'POST':
+        banner = request.FILES.get('file')
+        from studentshare.settings import BASE_DIR
+        import os
+        path = os.path.join(BASE_DIR, 'static/images/banners')
+        with open(os.path.join(path, banner.name), 'wb') as fp:
+            for chunk in banner.chunks():
+                fp.write(chunk)
+        return JsonResponse({'code': 0, 'msg': banner.name})
+
+def edit_banner(request):
+    if request.method == 'POST':
+        id = request.POST.get('id')
+        name = request.POST.get('name')
+        priority = request.POST.get('priority')
+        path = request.POST.get('path')
+        banner = Banner.objects.get(id=id)
+        banner.name = name
+        banner.priority = priority
+        banner.path = path
+        banner.save()
+        return JsonResponse({'code': 200, 'message': ''})
+
+def delete_banner(request):
+    if request.method == 'POST':
+        id = request.POST.get('id')
+        banner = Banner.objects.get(id=id)
+        banner.delete()
+        return JsonResponse({'code': 200, 'message': ''})

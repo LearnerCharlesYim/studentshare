@@ -1,22 +1,201 @@
 {% extends 'cms/base.html' %}
 
 {% block content %}
-    <div style="width:700px">
+<div id="banner-div" style="width:700px">
     <div style="width:700px;overflow: hidden">
-<h1 style="float: left">轮播图管理</h1>
-<button style="margin-top: 10px;float: right" type="button" class="layui-btn layui-btn-normal">新增轮播图</button>
-</div>
-
-     <div style="margin-top: 20px" class="layui-panel">
-         <span style="cursor: pointer;float: right"><i class="layui-icon layui-icon-close close-btn"></i>  </span>
-        <div style="padding: 30px 30px;">
-            <img style="width: 650px;height: 380px" src="{% static 'images/1.jpg' %}" alt="">
-        </div>
-         <input type="text" placeholder="名称">
-         <input type="text" placeholder="优先级">
-      </div>
-
+        <h1 style="float: left">轮播图管理</h1>
+        <button id="add-banner-btn" style="margin-top: 10px;float: right" type="button" class="layui-btn layui-btn-normal"><i class="layui-icon layui-icon-add-1"></i>新增轮播图</button>
     </div>
+    <div id="add-div" style="display: none;margin-top: 20px;overflow: hidden" class="layui-panel"></div>
 
+    {% for banner in banners %}
+    <div style="margin-top: 20px;overflow: hidden" class="layui-panel">
+     <span class="delete" data-id="{{ banner.id }}" style="cursor: pointer;float: right"><i class="layui-icon layui-icon-close close-btn"></i>  </span>
+    <div style="float: left;padding: 30px 30px;">
+        <img style="width: 300px;height: 140px;" class="img" src="{{ banner.path }}" alt="">
+        <div style="margin-left: 80px" class="layui-upload">
+          <button style="margin-left: 20px;margin-top: 20px" type="button" class="layui-btn upload-btn" >上传图片</button>
+        </div>
+    </div>
+     <div style="float:right">
+        <div style="margin-right: 20px;margin-top: 50px">
+            <div class="layui-form-item">
+            <label class="layui-form-label">名称</label>
+            <div class="layui-input-block">
+              <input type="text" name="name" required  lay-verify="required" value="{{ banner.name }}" placeholder="请输入名称" autocomplete="off" class="layui-input">
+            </div>
+          </div>
+         <div class="layui-form-item">
+            <label class="layui-form-label">优先级</label>
+            <div class="layui-input-block">
+              <input type="text" name="priority" required  lay-verify="required" value="{{ banner.priority }}" placeholder="请输入优先级" autocomplete="off" class="layui-input">
+            </div>
+          </div>
+        </div>
+        <button data-id="{{ banner.id }}" style="margin-right: 10px;float: right" type="button" class="layui-btn layui-btn-normal edit-btn">保存</button>
+     </div>
+  </div>
+    {% endfor %}
 
+ </div>
+
+    <script>
+
+    layui.use(['upload', 'element', 'layer'], function() {
+            var $ = layui.jquery
+            , upload = layui.upload
+            , element = layui.element
+            , layer = layui.layer;
+
+            $(document).on('click','#add-banner-btn',function () {
+                var div = $('#add-div');
+                div.css('display','block');
+                div.html(
+                    `
+   <span style="cursor: pointer;float: right" id='close'><i class="layui-icon layui-icon-close close-btn"></i>  </span>
+    <div style="float: left;padding: 30px 30px;">
+        <img style="width: 300px;height: 140px;" class="img" src="/static/images/1.jpg" alt="">
+        <div style="margin-left: 80px" class="layui-upload">
+          <button style="margin-left: 20px;margin-top: 20px" type="button" class="layui-btn" id="upload-btn" >上传图片</button>
+        </div>
+    </div>
+     <div style="float:right">
+        <div style="margin-right: 20px;margin-top: 50px">
+            <div class="layui-form-item">
+            <label class="layui-form-label">名称</label>
+            <div class="layui-input-block">
+              <input type="text" name="name" required  lay-verify="required" placeholder="请输入名称" autocomplete="off" class="layui-input">
+            </div>
+          </div>
+         <div class="layui-form-item">
+            <label class="layui-form-label">优先级</label>
+            <div class="layui-input-block">
+              <input type="text" name="priority" required  lay-verify="required" placeholder="请输入优先级" autocomplete="off" class="layui-input">
+            </div>
+          </div>
+        </div>
+        <button style="margin-right: 10px;float: right" type="button" class="layui-btn layui-btn-normal submit-btn">保存</button>
+     </div>
+                    `
+                );
+                $('#close').click(function () {
+                    var div = $('#add-div');
+                    div.css('display','none');
+                });
+              var uploadInst = upload.render({
+                    elem: '#upload-btn'
+                    ,url: '/cms/upload_banner/'
+                    ,done: function(res){
+                      if(res.code === 0){
+                        $(this.elem).parent().prev().attr('src','/static/images/banners/'+ res.msg);
+                      }
+                    }
+                    ,error: function(){
+                      //演示失败状态，并实现重传
+                      var demoText = $('#demoText');
+                      demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+                      demoText.find('.demo-reload').on('click', function(){
+                        uploadInst.upload();
+                      });
+                    }
+
+            });
+            });
+            //编辑轮播图
+            var uploadInst = upload.render({
+                    elem: '.upload-btn'
+                    ,url: '/cms/upload_banner/'
+                    ,done: function(res){
+                      if(res.code === 0){
+                          $(this.item).parent().prev().attr('src','/static/images/banners/'+ res.msg);
+                      }
+                    }
+                    ,error: function(){
+                      //演示失败状态，并实现重传
+                      var demoText = $('#demoText');
+                      demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+                      demoText.find('.demo-reload').on('click', function(){
+                        uploadInst.upload();
+                      });
+                    }
+
+            });
+
+           $('#banner-div').on('click','.submit-btn',function () {
+               var self = $(this);
+
+               var name = self.prev().find('input[name="name"]').val();
+               var priority = self.prev().find('input[name="priority"]').val();
+               var path = self.parent().prev().find('.img').attr('src');
+
+               $.ajax({
+               url:'/cms/banner/',
+               type:'POST',
+               data:{
+                   'name':name,
+                   'priority':priority,
+                   'path':path,
+
+               },
+               success:function (data) {
+                   if(data['code'] === 200){
+                       layer.msg('上传成功',{icon:1,time:1000},function () {
+                           window.location.reload();
+                       });
+
+                   }
+               }
+           })
+
+           });
+
+           $('#banner-div').on('click','.edit-btn',function () {
+               var self = $(this);
+
+               var name = self.prev().find('input[name="name"]').val();
+               var priority = self.prev().find('input[name="priority"]').val();
+               var path = self.parent().prev().find('.img').attr('src');
+
+               $.ajax({
+               url:'/cms/edit_banner/',
+               type:'POST',
+               data:{
+                   'id':self.attr('data-id'),
+                   'name':name,
+                   'priority':priority,
+                   'path':path,
+
+               },
+               success:function (data) {
+                   if(data['code'] === 200){
+                       layer.msg('编辑成功',{icon:1})
+                   }
+               }
+           })
+
+           });
+
+           $('#banner-div').on('click','.delete',function () {
+               var self = $(this);
+               var id = self.attr('data-id');
+
+               $.ajax({
+               url:'/cms/delete_banner/',
+               type:'POST',
+               data:{
+                   'id':id
+               },
+               success:function (data) {
+                   if(data['code'] === 200){
+                       layer.msg('删除成功',{icon:1});
+                       self.parent().remove();
+
+                   }
+               }
+           })
+
+           });
+
+    });
+    </script>
 {% endblock %}

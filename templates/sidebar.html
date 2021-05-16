@@ -79,15 +79,12 @@
                                 </p>
                             </div>
                             <div class="right-group">
-                                <a href="#">
+                                <a href="{% url 'res_detail' id=resource.id%}">
                                     <img src="{{ resource.img }}" alt="">
                                 </a>
                             </div>
                         </li>
                         {% endfor %}
-
-
-
                     </ul>
                 </div>
             </div>

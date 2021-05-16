@@ -1,6 +1,7 @@
 from django.shortcuts import render,redirect,reverse
 from django.views.decorators.http import require_http_methods
 from .models import User,Resources,Record,RecordFinish
+from cms.models import Banner
 import os
 from django.http import HttpResponse,JsonResponse
 from functools import wraps
@@ -21,6 +22,7 @@ def index(request):
     user_records = None
     user_finish_records = None
     resources = Resources.objects.filter(is_remove=False,is_access=True).order_by('-pub_time').all()[:3]
+    banners = Banner.objects.order_by('-priority').all()[:4]
     if request.session.get('current_user'):
         user = User.objects.get(id=request.session['current_user']['id'])
         records = Record.objects.filter(status=1).all()
@@ -36,7 +38,7 @@ def index(request):
             if (record.sender == user) or (record.receiver == user):
                 user_finish_records.append(record)
 
-    return render(request,'news/index.html',context={'user':user,'user_records':user_records,'user_finish_records':user_finish_records,'resources':resources})
+    return render(request,'news/index.html',context={'user':user,'user_records':user_records,'user_finish_records':user_finish_records,'resources':resources,'banners':banners})
 
 @require_http_methods(["POST"])
 def signup(request):

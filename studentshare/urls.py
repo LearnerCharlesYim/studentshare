@@ -53,5 +53,8 @@ urlpatterns = [
     path('cms/trade_access/',cms_views.trade_access,name='trade_access'),
     path('cms/trade_cancel/',cms_views.trade_cancel,name='trade_cancel'),
     path('cms/banner/',cms_views.banner,name='banner'),
+    path('cms/upload_banner/',cms_views.upload_banner,name='upload_banner'),
+    path('cms/edit_banner/',cms_views.edit_banner,name='edit_banner'),
+    path('cms/delete_banner/',cms_views.delete_banner,name='delete_banner'),
 ] + static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
 
